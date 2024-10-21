@@ -19,8 +19,8 @@ export class AuthService {
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
-
-    const user = await this.usersService.findByUsername(loginUserDto.username);
+    const username = loginUserDto.username.toLowerCase()
+    const user = await this.usersService.findByUsername(username);
     console.log(process.env.JWT_SECRET)
     if (user && await bcrypt.compare(loginUserDto.password, user.password)) {
       const payload = { cid: user.company_id, id: user.id};
