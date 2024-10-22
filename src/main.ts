@@ -16,9 +16,9 @@ async function bootstrap() {
     credentials: true, // Allow credentials (cookies) to be sent
   });
 
-  // Serve static files (images) from the uploads directory
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads/', // Set the prefix for accessing images
+  // Serve static files (images) from the assets directory
+  app.useStaticAssets(join(__dirname, '..', 'assets'), {
+    prefix: '/assets/', // Set the prefix for accessing images
   });
 
   await app.listen(4001); // Ensure the correct port

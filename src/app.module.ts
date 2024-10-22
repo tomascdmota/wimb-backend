@@ -8,28 +8,27 @@ import { UsersController } from './users/users.controller';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/user.entity';
 
-
 @Module({
   imports: [
+    ConfigModule.forRoot(), // This will load the .env file
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '185.97.146.17',
-      port: 5432,
-      username: 'tomascdmota', // Your PostgreSQL username
-      password: 'Tcdm.2021', // Your PostgreSQL password
-      database: 'wimb', // Your PostgreSQL database name
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}', User],
-      logging: true, 
-      synchronize: true, // Set to false for production
+      logging: true,
+      synchronize: process.env.DB_SYNC === 'true',
     }),
     UsersModule,
     AuthModule,
     ProductModule,
-    ConfigModule.forRoot(),
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-      consumer.apply(AuthMiddleware).forRoutes(UsersController);
+    consumer.apply(AuthMiddleware).forRoutes(UsersController);
   }
 }

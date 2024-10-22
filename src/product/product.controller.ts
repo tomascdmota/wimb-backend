@@ -19,7 +19,7 @@ export class ProductController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './uploads/products', // Save in products folder
+        destination: './assets/products', // Save in products folder
         filename: (req, file, cb) => {
           const ext = extname(file.originalname); // Get the file extension
           const filename = `${Date.now()}${ext}`; // Filename with timestamp
@@ -34,8 +34,8 @@ export class ProductController {
     @Req() req: Request, 
     @Res() res: Response
   ) {
-    // Ensure the uploads/products directory exists
-    const uploadDir = join(__dirname, '..', '..', 'uploads', 'products');
+    // Ensure the assets/products directory exists
+    const uploadDir = join(__dirname, '..', '..', 'assets', 'products');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true }); // Create the directory if it doesn't exist
     }
@@ -60,7 +60,7 @@ export class ProductController {
     }
 
     // Create imagePath for saving in DB, or set to null if no image is uploaded
-    const imagePath = file ? `/uploads/products/${webpFilename}` : null;
+    const imagePath = file ? `/assets/products/${webpFilename}` : null;
 
     let company_id: string;
     try {
