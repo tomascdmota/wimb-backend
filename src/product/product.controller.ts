@@ -56,7 +56,13 @@ export class ProductController {
         .toFile(webpPath);
 
       // Optional: Delete the original file after conversion
-      fs.unlinkSync(file.path);
+      fs.unlink(file.path, (err) => {
+        if (err) {
+          console.error('Error deleting file:', err);
+        } else {
+          console.log('File deleted successfully');
+        }
+      });
     }
 
     // Create imagePath for saving in DB, or set to null if no image is uploaded
@@ -108,6 +114,16 @@ export class ProductController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productService.findById(id);
+  }
+  
+  @Get("c/:id")
+  async findAllProductsByCompanyId(@Param('id') company_id: string, @Res() res: Response){
+    try {
+      const products = await this.productService.findAll(company_id);
+      return res.status(HttpStatus.OK).json({products: products.length ? products : []})
+    } catch(error){
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: "Error fetching company products"})
+    }
   }
 
   @Patch(':id')

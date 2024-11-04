@@ -30,6 +30,7 @@ export class ProductService {
     return this.productRepository.find({ where: { company_id } });
   }
 
+ 
   findById(id: string): Promise<Product | undefined> {
     return this.productRepository.findOne({ where: { id } });
   }

@@ -19,17 +19,25 @@ export class AuthService {
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
-    const username = loginUserDto.username.toLowerCase()
+    const username = loginUserDto.username.toLowerCase();
     const user = await this.usersService.findByUsername(username);
-    console.log(process.env.JWT_SECRET)
+
     if (user && await bcrypt.compare(loginUserDto.password, user.password)) {
-      const payload = { cid: user.company_id, id: user.id};
-      return {
-        access_token: this.jwtService.sign(payload, { expiresIn: '30d' }), // 1-hour expiry
-      };
+        const payload = { 
+            cid: user.company_id, 
+            uid: user.id,
+            usr: user.username,
+            dep: user.department,
+            pos: user.position,
+        };
+
+        return {
+            access_token: this.jwtService.sign(payload, { expiresIn: '30d' }),
+        };
     }
     throw new Error('Invalid credentials');
-  }
+}
+
 
   async register(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);

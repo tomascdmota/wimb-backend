@@ -39,6 +39,8 @@ export class User {
   updatedAt: Date;
     length: any;
 
+  @Column()
+  profile_image_path: string;
   // Constructor to set the UUID for the id field
   constructor() {
     this.id = uuidv4(); // Generate a random UUID when creating a new user
